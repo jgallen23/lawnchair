@@ -126,7 +126,6 @@ WebkitSQLiteAdaptor.prototype = {
 		for (var i = 0, c = itemKeys.length; i < c; i++) {
 			keys.push( "'"+itemKeys[i]+"'");
 		}
-		console.log(keys);
 		this.db.transaction(function(t) {
 			t.executeSql(
 				"SELECT value FROM " + that.table + " WHERE id in ("+keys.join(',')+")",
