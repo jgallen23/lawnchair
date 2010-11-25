@@ -128,13 +128,14 @@ WebkitSQLiteAdaptor.prototype = {
 		}
 		this.db.transaction(function(t) {
 			t.executeSql(
-				"SELECT value FROM " + that.table + " WHERE id in ("+keys.join(',')+")",
+				"SELECT id, value FROM " + that.table + " WHERE id in ("+keys.join(',')+")",
 				[],
 				function(tx, results) {
 					var o = [];
 					for (var i = 0, c = results.rows.length; i < c; i++) {
-						var item = that.deserialize(results.rows.item(i).value);
-						item.key = itemKeys[i];
+						var rowItem = results.rows.item(i);
+						var item = that.deserialize(rowItem.value);
+						item.key = rowItem.id; 
 						o.push(item);
 					}
 					that.terseToVerboseCallback(callback)(o);
