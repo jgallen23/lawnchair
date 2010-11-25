@@ -120,6 +120,30 @@ WebkitSQLiteAdaptor.prototype = {
 			);
 		});
 	},
+	getMany:function(itemKeys, callback) {
+		var that = this;
+		var keys = [];
+		for (var i = 0, c = itemKeys.length; i < c; i++) {
+			keys.push( "'"+itemKeys[i]+"'");
+		}
+		console.log(keys);
+		this.db.transaction(function(t) {
+			t.executeSql(
+				"SELECT value FROM " + that.table + " WHERE id in ("+keys.join(',')+")",
+				[],
+				function(tx, results) {
+					var o = [];
+					for (var i = 0, c = results.rows.length; i < c; i++) {
+						var item = that.deserialize(results.rows.item(i).value);
+						item.key = itemKeys[i];
+						o.push(item);
+					}
+					that.terseToVerboseCallback(callback)(o);
+				},
+				this.onError
+			);
+		});
+	},
 	all:function(callback) {
 		var cb = this.terseToVerboseCallback(callback);
 		var that = this;
