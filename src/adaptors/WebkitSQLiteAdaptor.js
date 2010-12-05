@@ -140,7 +140,7 @@ WebkitSQLiteAdaptor.prototype = {
 					}
 					that.terseToVerboseCallback(callback)(o);
 				},
-				this.onError
+				that.onError
 			);
 		});
 	},
