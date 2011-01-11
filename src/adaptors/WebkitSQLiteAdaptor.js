@@ -201,6 +201,23 @@ WebkitSQLiteAdaptor.prototype = {
 			);
 		});
 	},
+	removeMany:function(itemKeys, callback) {
+		var that = this;
+		var keysArr = [];
+		for (var i = 0, c = itemKeys.length; i < c; i++) {
+			keysArr.push( "'"+itemKeys[i]+"'");
+		}
+        if (callback)
+            callback = that.terseToVerboseCallback(callback);
+		this.db.transaction(function(t) {
+			t.executeSql(
+				"DELETE FROM " + that.table + " WHERE id in ("+keysArr.join(',')+")",
+				[],
+				callback || that.onData,
+				that.onError
+			);
+		});
+	},
 	nuke:function(callback) {
 		var that = this;
         if (callback)
